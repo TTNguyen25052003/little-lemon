@@ -4,15 +4,21 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -39,69 +45,94 @@ import app.kotlin.littlelemon.ui.theme.subTitle
 
 @Composable
 fun OnboardingScreen(
-    contentOfButton: String,
+    listOfLabel: List<String>,
+    listOfPlaceholder: List<String>,
     navController: NavController
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                color = Color.White
-            )
-            .padding(top = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(
-            painterResource(id = R.drawable.app_logo),
-            contentDescription = "",
-        )
+    LazyColumn {
+        item {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                IconButton(
+                    onClick = { navController.popBackStack() },
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = HighlightColor.charcoalGray
+                    ),
+                    modifier = Modifier.align(alignment = Alignment.CenterStart)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = ""
+                    )
+                }
+                Image(
+                    painterResource(id = R.drawable.app_logo),
+                    contentDescription = "",
+                    modifier = Modifier.align(alignment = Alignment.Center)
+                )
+            }
+        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+        }
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(128.dp)
-                .background(
-                    color = PrimaryColor.plateGreen
-                ),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = "Let you to know",
-                style = subTitle.fontScale(),
-                color = HighlightColor.platinumGray
+        item {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(128.dp)
+                    .background(
+                        color = PrimaryColor.plateGreen
+                    ),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(id = R.string.let_get_you_to_know),
+                    style = subTitle.fontScale(),
+                    color = HighlightColor.platinumGray
+                )
+            }
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(40.dp))
+        }
+
+
+        item {
+            InputForm(
+                listOfLabel = listOfLabel,
+                listOfPlaceholder = listOfPlaceholder
             )
         }
 
-        Spacer(modifier = Modifier.height(40.dp))
+        item {
+            Spacer(modifier = Modifier.height(48.dp))
+        }
 
-        val listLabel: List<String> = listOf(
-            stringResource(id = R.string.label_1),
-            stringResource(id = R.string.label_2),
-            stringResource(id = R.string.label_3),
-        )
-        val listPlaceholderValue: List<String> = listOf(
-            stringResource(id = R.string.placeholder_value_1),
-            stringResource(id = R.string.placeholder_value_2),
-            stringResource(id = R.string.placeholder_value_3),
-        )
-        InputForm(listLabel = listLabel, listPlaceholderValue = listPlaceholderValue)
+        item {
+            FinishButton(
+                strSrc = R.string.register_button,
+                action = {
+                    navController.navigate(route = "LoginScreen") {
+                        popUpTo(id = 0)
+                    }
+                }
+            )
+        }
 
-        Spacer(modifier = Modifier.height(80.dp))
-
-        FinishButton(
-            content = contentOfButton,
-            action = { navController.navigateUp() }
-        )
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+        }
     }
 }
 
 @Composable
 private fun InputForm(
-    listLabel: List<String>,
-    listPlaceholderValue: List<String>
+    listOfLabel: List<String>,
+    listOfPlaceholder: List<String>
 ) {
     Column(
         modifier = Modifier
@@ -118,23 +149,23 @@ private fun InputForm(
             color = HighlightColor.charcoalGray
         )
         InputField(
-            listLabel = listLabel,
-            listPlaceholderValue = listPlaceholderValue
+            listOfLabel = listOfLabel,
+            listOfPlaceholder = listOfPlaceholder
         )
     }
 }
 
 @Composable
 private fun InputField(
-    listLabel: List<String>,
-    listPlaceholderValue: List<String>
+    listOfLabel: List<String>,
+    listOfPlaceholder: List<String>
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
-        for (i in listLabel.indices) {
+        for (i in listOfLabel.indices) {
             InputSection(
-                label = listLabel[i],
-                placeholderValue = listPlaceholderValue[i],
-                imeAction = if (i != listLabel.size - 1) {
+                label = listOfLabel[i],
+                placeholderValue = listOfPlaceholder[i],
+                imeAction = if (i != listOfLabel.size - 1) {
                     ImeAction.Next
                 } else {
                     ImeAction.Done

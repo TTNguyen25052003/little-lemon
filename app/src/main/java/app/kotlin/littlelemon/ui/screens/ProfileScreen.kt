@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -44,12 +45,13 @@ import app.kotlin.littlelemon.ui.theme.subTitle
 @Composable
 fun ProfileScreen(
     //Vars are filled in InfoField
+    listOfLabel: List<String>,
     listOfContent: List<String>,
 
     //NavController for navigation
     navController: NavController
 ) {
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(
@@ -59,71 +61,77 @@ fun ProfileScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         //App logo and back button
-        Box(modifier = Modifier.fillMaxWidth()) {
-            IconButton(
-                onClick = { navController.popBackStack() },
-                colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = HighlightColor.charcoalGray
-                ),
-                modifier = Modifier.align(alignment = Alignment.CenterStart)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = ""
+        item {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                IconButton(
+                    onClick = { navController.popBackStack() },
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = HighlightColor.charcoalGray
+                    ),
+                    modifier = Modifier.align(alignment = Alignment.CenterStart)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = ""
+                    )
+                }
+
+                Image(
+                    painter = painterResource(id = R.drawable.app_logo),
+                    contentDescription = "",
+                    modifier = Modifier.align(alignment = Alignment.Center)
                 )
             }
-
-            Image(
-                painter = painterResource(id = R.drawable.app_logo),
-                contentDescription = "",
-                modifier = Modifier.align(alignment = Alignment.Center)
-            )
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+
 
         //User avatar
-        Card(
-            modifier = Modifier
-                .width(148.dp)
-                .height(148.dp),
-            shape = CircleShape,
-            border = BorderStroke(
-                width = (0.2).dp,
-                color = HighlightColor.charcoalGray.copy(alpha = 0.2f)
-            )
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.avatar),
-                contentDescription = "",
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier.fillMaxSize()
+        item {
+            Card(
+                modifier = Modifier
+                    .width(148.dp)
+                    .height(148.dp),
+                shape = CircleShape,
+                border = BorderStroke(
+                    width = (0.2).dp,
+                    color = HighlightColor.charcoalGray.copy(alpha = 0.2f)
+                )
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.avatar),
+                    contentDescription = "",
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(40.dp))
+        }
+
+
+
+        item {
+
+            InfoField(
+                listOfLabel = listOfLabel,
+                listOfContent = listOfContent
             )
         }
 
-        Spacer(modifier = Modifier.height(40.dp))
+        item {
+            Spacer(modifier = Modifier.height(48.dp))
+        }
 
-        val listOfLabel: List<String> = listOf(
-            stringResource(id = R.string.label_1),
-            stringResource(id = R.string.label_2),
-            stringResource(id = R.string.label_3),
-        )
-        InfoField(
-            listOfLabel = listOfLabel,
-            listOfContent = listOfContent
-        )
-
-        Spacer(modifier = Modifier.height(80.dp))
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 24.dp),
-            contentAlignment = Alignment.BottomCenter
-        ) {
+        item {
             FinishButton(
-                content = "Log out",
+                strSrc = R.string.login_button,
                 action = {
                     navController.navigate(route = "LoginScreen") {
                         popUpTo(id = 0)
@@ -132,6 +140,9 @@ fun ProfileScreen(
             )
         }
 
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+        }
     }
 }
 

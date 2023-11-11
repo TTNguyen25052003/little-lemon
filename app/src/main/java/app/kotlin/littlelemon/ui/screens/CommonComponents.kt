@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.kotlin.littlelemon.ui.theme.HighlightColor
 import app.kotlin.littlelemon.ui.theme.PrimaryColor
@@ -21,7 +22,7 @@ import app.kotlin.littlelemon.ui.theme.leadText
 @Composable
 fun FinishButton(
     isFilledButton: Boolean = true,
-    content: String,
+    strSrc: Int,
     action: () -> Unit
 ) {
     Button(
@@ -48,9 +49,10 @@ fun FinishButton(
         )
     ) {
         Text(
-            text = content,
+            text = stringResource(id = strSrc),
             style = leadText,
             color = HighlightColor.charcoalGray,
         )
     }
 }
+

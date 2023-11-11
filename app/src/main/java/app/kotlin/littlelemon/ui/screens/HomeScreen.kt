@@ -60,59 +60,84 @@ import app.kotlin.littlelemon.ui.theme.subTitle
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 16.dp)
-    ) {
-        TopBar(navController = navController)
+    LazyColumn {
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+        }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        item {
+            TopBar(navController = navController)
+        }
 
-        Introduction()
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+        }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        item {
+            Introduction()
+        }
 
-        OrderForDelivery()
+        item {
+            Spacer(modifier = Modifier.height(8.dp))
+        }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        item {
+            OrderForDelivery()
+        }
 
-        val listOfCategory: List<String> = listOf(
-            "Starter",
-            "Main",
-            "Dessert",
-            "Sides"
-        )
-        val listOfAction: List<() -> Unit> = listOf({}, {}, {}, {})
-        SectionCategory(
-            listOfAction = listOfAction,
-            listOfCategory = listOfCategory
-        )
+        item {
+            Spacer(modifier = Modifier.height(8.dp))
+        }
 
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Canvas(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            val canvasWidth = size.width
-            drawLine(
-                color = Color.Black,
-                start = Offset(x = canvasWidth, y = 0f),
-                end = Offset(x = 0f, y = 0f),
-                strokeWidth = 1f,
-                alpha = 0.5f,
-                pathEffect = PathEffect.dashPathEffect(
-                    intervals = FloatArray(2)
-                )
+        item {
+            val listOfCategory: List<String> = listOf(
+                "Starter",
+                "Main",
+                "Dessert",
+                "Sides"
+            )
+            val listOfAction: List<() -> Unit> = listOf({}, {}, {}, {})
+            SectionCategory(
+                listOfAction = listOfAction,
+                listOfCategory = listOfCategory
             )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+        }
 
-        ListOfFoodItem(sizeOfFoodItem = 7)
+        item {
+            Canvas(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                val canvasWidth = size.width
+                drawLine(
+                    color = Color.Black,
+                    start = Offset(x = canvasWidth, y = 0f),
+                    end = Offset(x = 0f, y = 0f),
+                    strokeWidth = 1f,
+                    alpha = 0.5f,
+                    pathEffect = PathEffect.dashPathEffect(
+                        intervals = FloatArray(2)
+                    )
+                )
+            }
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        item {
+            ListOfFoodItem(sizeOfFoodItem = 7)
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+        }
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -149,7 +174,7 @@ fun TopBar(navController: NavController) {
                 color = HighlightColor.charcoalGray
             ),
             onClick = {
-               navController.navigate(route = "ProfileScreen")
+                navController.navigate(route = "ProfileScreen")
             }
         ) {
             Image(
@@ -359,7 +384,7 @@ fun SectionCategoryTag(
 fun ListOfFoodItem(
     sizeOfFoodItem: Int
 ) {
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
@@ -368,7 +393,7 @@ fun ListOfFoodItem(
             ),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        items(sizeOfFoodItem) { index ->
+        for (i: Int in 0 until sizeOfFoodItem) {
             FoodItem(
                 itemName = "Item name",
                 itemDescription = "Item description",
@@ -417,7 +442,7 @@ fun FoodItem(
 
             Row(verticalAlignment = Alignment.Bottom) {
                 Text(
-                    text = "Price",
+                    text = stringResource(id = R.string.price_title),
                     style = cardTitle.fontScale(),
                     color = HighlightColor.charcoalGray
                 )
