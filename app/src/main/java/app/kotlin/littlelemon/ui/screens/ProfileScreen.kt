@@ -131,7 +131,7 @@ fun ProfileScreen(
 
         item {
             FinishButton(
-                strSrc = R.string.login_button,
+                strSrc = R.string.logout_button,
                 action = {
                     navController.navigate(route = "LoginScreen") {
                         popUpTo(id = 0)

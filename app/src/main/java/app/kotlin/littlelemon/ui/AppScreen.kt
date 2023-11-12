@@ -15,13 +15,13 @@ import app.kotlin.littlelemon.ui.screens.ProfileScreen
 @Composable
 fun AppScreen() {
     val navController: NavHostController = rememberNavController()
-    val listOfLabel:List<String> = listOf(
+    val listOfLabel: List<String> = listOf(
         stringResource(id = R.string.label_firstname),
         stringResource(id = R.string.label_lastname),
         stringResource(id = R.string.label_email),
         stringResource(id = R.string.label_password)
     )
-    val listOfPlaceholder:List<String> = listOf(
+    val listOfPlaceholder: List<String> = listOf(
         stringResource(id = R.string.placeholder_firstname),
         stringResource(id = R.string.placeholder_lastname),
         stringResource(id = R.string.placeholder_email),
@@ -52,9 +52,13 @@ fun AppScreen() {
             ProfileScreen(
                 listOfLabel = listOfLabel.subList(
                     fromIndex = 0,
-                    toIndex = 4
+                    toIndex = 3
                 ),
-                listOfContent = listOf("Nguyen","Nguyen","Nguyen"),
+                listOfContent = listOf(
+                    "Nguyen",
+                    "Nguyen",
+                    "Nguyen"
+                ),
                 navController = navController
             )
         }
