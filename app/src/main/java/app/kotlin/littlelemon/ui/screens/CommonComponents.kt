@@ -17,13 +17,15 @@ import androidx.compose.ui.unit.dp
 import app.kotlin.littlelemon.ui.theme.HighlightColor
 import app.kotlin.littlelemon.ui.theme.PrimaryColor
 import app.kotlin.littlelemon.ui.theme.SecondaryColor
+import app.kotlin.littlelemon.ui.theme.fontScale
 import app.kotlin.littlelemon.ui.theme.leadText
 
 @Composable
 fun FinishButton(
     isFilledButton: Boolean = true,
     strSrc: Int,
-    action: () -> Unit
+    action: () -> Unit,
+    canPress: Boolean = true
 ) {
     Button(
         onClick = action,
@@ -34,10 +36,15 @@ fun FinishButton(
                 end = 16.dp,
             )
             .fillMaxWidth(),
+        enabled = canPress,
         shape = RoundedCornerShape(10.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = if (isFilledButton) {
-                PrimaryColor.sunflowerYellow
+                if (canPress) {
+                    PrimaryColor.sunflowerYellow
+                } else {
+                    HighlightColor.platinumGray
+                }
             } else {
                 Color.Transparent
             },
@@ -45,12 +52,16 @@ fun FinishButton(
         contentPadding = PaddingValues(all = 0.dp),
         border = BorderStroke(
             width = 2.dp,
-            color = SecondaryColor.coralPink
+            color = if (canPress) {
+                SecondaryColor.coralPink
+            } else {
+                SecondaryColor.palePink
+            }
         )
     ) {
         Text(
             text = stringResource(id = strSrc),
-            style = leadText,
+            style = leadText.fontScale(),
             color = HighlightColor.charcoalGray,
         )
     }

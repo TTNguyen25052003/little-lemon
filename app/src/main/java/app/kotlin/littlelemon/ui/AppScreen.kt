@@ -1,19 +1,31 @@
 package app.kotlin.littlelemon.ui
 
+import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import app.kotlin.littlelemon.R
+import app.kotlin.littlelemon.di.LittleLemonRepository
 import app.kotlin.littlelemon.ui.screens.HomeScreen
 import app.kotlin.littlelemon.ui.screens.LoginScreen
 import app.kotlin.littlelemon.ui.screens.OnboardingScreen
 import app.kotlin.littlelemon.ui.screens.ProfileScreen
+import app.kotlin.littlelemon.ui.viewmodels.LoginProfileScreenViewModel
+import app.kotlin.littlelemon.ui.viewmodels.LoginProfileScreenViewModelFactory
+import app.kotlin.littlelemon.ui.viewmodels.LoginProfileState
 
 @Composable
-fun AppScreen() {
+fun AppScreen(
+    modifier: Modifier,
+    context: Context,
+) {
     val navController: NavHostController = rememberNavController()
     val listOfLabel: List<String> = listOf(
         stringResource(id = R.string.label_firstname),
@@ -28,24 +40,41 @@ fun AppScreen() {
         stringResource(id = R.string.placeholder_password)
     )
 
+
+    val loginProfileViewModel: LoginProfileScreenViewModel = viewModel(
+        factory = LoginProfileScreenViewModelFactory(
+            littleLemonRepository = LittleLemonRepository(context = context)
+        )
+    )
+
     NavHost(
         navController = navController,
         startDestination = "LoginScreen"
     ) {
         composable(route = "LoginScreen") {
-            LoginScreen(navController = navController)
+            LoginScreen(
+                navController = navController,
+                modifier = modifier,
+                viewModel = loginProfileViewModel
+            )
         }
 
         composable(route = "OnboardingScreen") {
             OnboardingScreen(
+                context = context,
                 listOfLabel = listOfLabel,
                 listOfPlaceholder = listOfPlaceholder,
-                navController = navController
+                navController = navController,
+                modifier = modifier,
             )
         }
 
         composable(route = "HomeScreen") {
-            HomeScreen(navController = navController)
+            HomeScreen(
+                context = context,
+                navController = navController,
+                modifier = modifier
+            )
         }
 
         composable(route = "ProfileScreen") {
@@ -54,12 +83,9 @@ fun AppScreen() {
                     fromIndex = 0,
                     toIndex = 3
                 ),
-                listOfContent = listOf(
-                    "Nguyen",
-                    "Nguyen",
-                    "Nguyen"
-                ),
-                navController = navController
+                navController = navController,
+                viewModel = loginProfileViewModel,
+                modifier = modifier
             )
         }
     }

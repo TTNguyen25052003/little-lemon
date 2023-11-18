@@ -32,4 +32,6 @@
         focused on traditional recipes served with a modern twist.
     </string>
 
+    <string name="warning_message_1">The field is required</string>
+    <string name="warning_message_2">Invalid or existed email</string>
 </resources>

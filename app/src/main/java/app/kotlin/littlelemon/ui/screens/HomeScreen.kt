@@ -1,5 +1,6 @@
 package app.kotlin.littlelemon.ui.screens
 
+import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -19,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
@@ -31,6 +33,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,13 +46,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import app.kotlin.littlelemon.R
+import app.kotlin.littlelemon.data.FoodItem
+import app.kotlin.littlelemon.data.ListOfFoodItem
+import app.kotlin.littlelemon.di.LittleLemonRepository
 import app.kotlin.littlelemon.ui.theme.HighlightColor
 import app.kotlin.littlelemon.ui.theme.PrimaryColor
+import app.kotlin.littlelemon.ui.theme.SecondaryColor
 import app.kotlin.littlelemon.ui.theme.cardTitle
 import app.kotlin.littlelemon.ui.theme.displayText
 import app.kotlin.littlelemon.ui.theme.fontScale
@@ -57,10 +70,26 @@ import app.kotlin.littlelemon.ui.theme.paragraphText
 import app.kotlin.littlelemon.ui.theme.sectionCategory
 import app.kotlin.littlelemon.ui.theme.sectionTitle
 import app.kotlin.littlelemon.ui.theme.subTitle
+import app.kotlin.littlelemon.ui.viewmodels.ConnectionState
+import app.kotlin.littlelemon.ui.viewmodels.HomeScreenUiState
+import app.kotlin.littlelemon.ui.viewmodels.HomeScreenViewModel
+import app.kotlin.littlelemon.ui.viewmodels.HomeScreenViewModelFactory
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 
 @Composable
-fun HomeScreen(navController: NavController) {
-    LazyColumn {
+fun HomeScreen(
+    context: Context,
+    navController: NavController,
+    viewModel: HomeScreenViewModel = viewModel(
+        factory = HomeScreenViewModelFactory(
+            littleLemonRepository = LittleLemonRepository(context = context)
+        )
+    ),
+    modifier: Modifier
+) {
+    val homeScreenUiState: State<HomeScreenUiState> = viewModel.uiState.collectAsState()
+    LazyColumn(modifier = modifier) {
         item {
             Spacer(modifier = Modifier.height(16.dp))
         }
@@ -74,7 +103,7 @@ fun HomeScreen(navController: NavController) {
         }
 
         item {
-            Introduction()
+            Introduction(action = viewModel.searchAction)
         }
 
         item {
@@ -90,16 +119,10 @@ fun HomeScreen(navController: NavController) {
         }
 
         item {
-            val listOfCategory: List<String> = listOf(
-                "Starter",
-                "Main",
-                "Dessert",
-                "Sides"
-            )
-            val listOfAction: List<() -> Unit> = listOf({}, {}, {}, {})
             SectionCategory(
-                listOfAction = listOfAction,
-                listOfCategory = listOfCategory
+                listOfAction = viewModel.listOfFilterAction,
+                listOfCategory = viewModel.listOfCategory,
+                listOfStatus = homeScreenUiState.value.listOfFilterStatus
             )
         }
 
@@ -111,7 +134,7 @@ fun HomeScreen(navController: NavController) {
             Canvas(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                val canvasWidth = size.width
+                val canvasWidth: Float = size.width
                 drawLine(
                     color = Color.Black,
                     start = Offset(x = canvasWidth, y = 0f),
@@ -130,7 +153,11 @@ fun HomeScreen(navController: NavController) {
         }
 
         item {
-            ListOfFoodItem(sizeOfFoodItem = 7)
+            ListOfFoodItemColumn(
+                connectionState = viewModel.connectionState,
+                listOfFoodItem = homeScreenUiState.value.listOfFoodItem,
+                retryAction = { viewModel.getListOfFoodItem() }
+            )
         }
 
         item {
@@ -175,7 +202,10 @@ fun TopBar(navController: NavController) {
             ),
             onClick = {
                 navController.navigate(route = "ProfileScreen")
-            }
+            },
+            colors = CardDefaults.cardColors(
+                containerColor = Color.Transparent
+            )
         ) {
             Image(
                 painter = painterResource(id = R.drawable.avatar),
@@ -189,7 +219,7 @@ fun TopBar(navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Introduction() {
+fun Introduction(action: (String) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -248,8 +278,8 @@ fun Introduction() {
                     shape = RoundedCornerShape(20.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.avatar),
-                        contentScale = ContentScale.FillBounds,
+                        painter = painterResource(id = R.drawable.hero_image),
+                        contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize(),
                         contentDescription = ""
                     )
@@ -260,12 +290,15 @@ fun Introduction() {
         Spacer(modifier = Modifier.height(40.dp))
 
         //SearchField
-        var searchPhrase by remember {
-            mutableStateOf("")
+        var searchPhrase: String by remember {
+            mutableStateOf(value = "")
         }
         TextField(
             value = searchPhrase,
-            onValueChange = { searchPhrase = it },
+            onValueChange = {
+                searchPhrase = it
+                action(it)
+            },
             modifier = Modifier
                 .fillMaxWidth(),
             shape = RoundedCornerShape(10.dp),
@@ -287,7 +320,11 @@ fun Introduction() {
                     color = HighlightColor.charcoalGray
                 )
             },
-            textStyle = highlightText.fontScale()
+            textStyle = highlightText.fontScale(),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done,
+                capitalization = KeyboardCapitalization.None
+            )
         )
     }
 }
@@ -329,11 +366,11 @@ fun OrderForDelivery() {
     }
 }
 
-
 @Composable
 fun SectionCategory(
     listOfAction: List<() -> Unit>,
-    listOfCategory: List<String>
+    listOfCategory: List<String>,
+    listOfStatus: List<Boolean>
 ) {
     LazyRow(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
         item {
@@ -344,7 +381,8 @@ fun SectionCategory(
             Row {
                 SectionCategoryTag(
                     action = listOfAction[index],
-                    category = listOfCategory[index]
+                    category = listOfCategory[index],
+                    isPressed = listOfStatus[index]
                 )
             }
         }
@@ -358,7 +396,8 @@ fun SectionCategory(
 @Composable
 fun SectionCategoryTag(
     action: () -> Unit,
-    category: String
+    category: String,
+    isPressed: Boolean
 ) {
     Button(
         onClick = action,
@@ -367,7 +406,11 @@ fun SectionCategoryTag(
             .height(30.dp),
         shape = RoundedCornerShape(20.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = HighlightColor.platinumGray
+            containerColor = if (isPressed) {
+                PrimaryColor.sunflowerYellow
+            } else {
+                HighlightColor.platinumGray
+            }
         ),
         contentPadding = PaddingValues(all = 0.dp)
     ) {
@@ -381,37 +424,39 @@ fun SectionCategoryTag(
 
 
 @Composable
-fun ListOfFoodItem(
-    sizeOfFoodItem: Int
+fun ListOfFoodItemColumn(
+    connectionState: ConnectionState,
+    listOfFoodItem: ListOfFoodItem,
+    retryAction: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                start = 24.dp,
-                end = 24.dp
-            ),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        for (i: Int in 0 until sizeOfFoodItem) {
-            FoodItem(
-                itemName = "Item name",
-                itemDescription = "Item description",
-                priceValue = "$10.00",
-                imgSrc = R.drawable.ic_launcher_background
-            )
+    when (connectionState) {
+        ConnectionState.Loading -> LoadingScreen()
+        ConnectionState.Error -> ErrorScreen(retryAction = retryAction)
+        ConnectionState.Successful -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = 24.dp,
+                        end = 24.dp
+                    ),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                for (i: Int in listOfFoodItem.menu.indices) {
+                    FoodItemTag(
+                        listOfFoodItem.menu[i]
+                    )
+                }
+            }
         }
     }
 }
 
 @Composable
-fun FoodItem(
-    itemName: String,
-    itemDescription: String,
-    priceValue: String,
-    imgSrc: Int
+fun FoodItemTag(
+    foodItem: FoodItem,
 ) {
-    Row(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = HighlightColor.platinumGray)
@@ -421,25 +466,54 @@ fun FoodItem(
                 top = 16.dp,
                 bottom = 16.dp
             ),
-        horizontalArrangement = Arrangement.SpaceBetween
     ) {
+        Card(
+            modifier = Modifier
+                .width(80.dp)
+                .height(80.dp)
+                .align(alignment = Alignment.CenterEnd),
+            shape = RectangleShape,
+            colors = CardDefaults.cardColors(
+                containerColor = Color.Transparent
+            )
+        ) {
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data(foodItem.image)
+                    .crossfade(enable = true)
+                    .build(),
+                contentDescription = "",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(id = R.drawable.image_placeholder)
+            )
+        }
+
         Column(
-            modifier = Modifier.height(80.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 24.dp)
+                .align(Alignment.CenterStart)
+                .height(80.dp),
         ) {
             Column {
                 Text(
-                    text = itemName,
+                    text = foodItem.title,
                     style = cardTitle.fontScale(),
                     color = HighlightColor.charcoalGray
                 )
                 Text(
-                    text = itemDescription,
+                    text = foodItem.description,
                     style = paragraphText.fontScale(),
-                    color = HighlightColor.charcoalGray
+                    color = HighlightColor.charcoalGray,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 80.dp),
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
                 )
             }
-
             Row(verticalAlignment = Alignment.Bottom) {
                 Text(
                     text = stringResource(id = R.string.price_title),
@@ -450,25 +524,59 @@ fun FoodItem(
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Text(
-                    text = priceValue,
+                    text = foodItem.price,
                     style = highlightText.fontScale(),
                     color = HighlightColor.charcoalGray
                 )
             }
         }
-        Card(
-            modifier = Modifier
-                .width(80.dp)
-                .height(80.dp),
-            shape = RectangleShape
+    }
+}
+
+@Composable
+fun LoadingScreen() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(256.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Loading...",
+            style = paragraphText.fontScale(),
+            color = HighlightColor.charcoalGray
+        )
+    }
+}
+
+@Composable
+fun ErrorScreen(
+    retryAction: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(256.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Button(
+            onClick = retryAction,
+            border = BorderStroke(
+                width = 2.dp,
+                color = SecondaryColor.coralPink
+            ),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = PrimaryColor.sunflowerYellow
+            )
         ) {
-            Image(
-                painter = painterResource(id = imgSrc),
-                contentDescription = "",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.FillBounds
+            Text(
+                text = "Reload menu",
+                style = sectionCategory.fontScale(),
+                color = PrimaryColor.plateGreen
             )
         }
     }
 }
+
+
 

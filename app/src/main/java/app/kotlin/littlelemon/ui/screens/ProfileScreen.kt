@@ -2,7 +2,6 @@ package app.kotlin.littlelemon.ui.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -41,23 +41,17 @@ import app.kotlin.littlelemon.ui.theme.fontScale
 import app.kotlin.littlelemon.ui.theme.paragraphText
 import app.kotlin.littlelemon.ui.theme.sectionCategory
 import app.kotlin.littlelemon.ui.theme.subTitle
+import app.kotlin.littlelemon.ui.viewmodels.LoginProfileScreenViewModel
 
 @Composable
 fun ProfileScreen(
-    //Vars are filled in InfoField
     listOfLabel: List<String>,
-    listOfContent: List<String>,
-
-    //NavController for navigation
-    navController: NavController
+    navController: NavController,
+    viewModel: LoginProfileScreenViewModel,
+    modifier:Modifier
 ) {
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                color = Color.White
-            )
-            .padding(top = 16.dp),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         //App logo and back button
@@ -89,7 +83,6 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(20.dp))
         }
 
-
         //User avatar
         item {
             Card(
@@ -100,6 +93,9 @@ fun ProfileScreen(
                 border = BorderStroke(
                     width = (0.2).dp,
                     color = HighlightColor.charcoalGray.copy(alpha = 0.2f)
+                ),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.Transparent
                 )
             ) {
                 Image(
@@ -115,13 +111,14 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(40.dp))
         }
 
-
-
         item {
-
             InfoField(
                 listOfLabel = listOfLabel,
-                listOfContent = listOfContent
+                listOfContent = listOf(
+                    viewModel.userGot.firstName,
+                    viewModel.userGot.lastName,
+                    viewModel.userGot.email
+                )
             )
         }
 
@@ -133,6 +130,7 @@ fun ProfileScreen(
             FinishButton(
                 strSrc = R.string.logout_button,
                 action = {
+                    viewModel.resetState()
                     navController.navigate(route = "LoginScreen") {
                         popUpTo(id = 0)
                     }
@@ -165,28 +163,17 @@ private fun InfoField(
         )
 
         //Info shown
-        InfoContent(
-            listOfLabel = listOfLabel,
-            listOfContent = listOfContent
-        )
-    }
-}
-
-@Composable
-private fun InfoContent(
-    listOfLabel: List<String>,
-    listOfContent: List<String>
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(24.dp)
-    ) {
-        for (i: Int in listOfLabel.indices) {
-            InfoSection(
-                label = listOfLabel[i],
-                content = listOfContent[i]
-            )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(24.dp)
+        ) {
+            for (i: Int in listOfLabel.indices) {
+                InfoSection(
+                    label = listOfLabel[i],
+                    content = listOfContent[i]
+                )
+            }
         }
     }
 }

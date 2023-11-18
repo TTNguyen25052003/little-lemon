@@ -33,26 +33,33 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import app.kotlin.littlelemon.R
 import app.kotlin.littlelemon.ui.theme.HighlightColor
 import app.kotlin.littlelemon.ui.theme.fontScale
 import app.kotlin.littlelemon.ui.theme.leadText
+import app.kotlin.littlelemon.ui.theme.paragraphText
+import app.kotlin.littlelemon.ui.viewmodels.LoginProfileScreenViewModel
+import kotlinx.coroutines.runBlocking
+import kotlin.math.abs
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    //navController for navigation
-    navController: NavController
+    navController: NavController,
+    viewModel: LoginProfileScreenViewModel,
+    modifier: Modifier
 ) {
     val screenHeight: Int = LocalConfiguration.current.screenHeightDp
-    LazyColumn {
+    LazyColumn(modifier = modifier) {
+        var showWarning: Boolean by mutableStateOf(value = false)
         item {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = ((screenHeight - 464) / 2).dp),
+                    .padding(top = (abs(n = screenHeight - 464) / 2).dp),
             ) {
                 Column(
                     modifier = Modifier
@@ -77,15 +84,22 @@ fun LoginScreen(
                         )
                     }
 
-
                     Spacer(modifier = Modifier.height(16.dp))
+
+                    // Email login input field
 
                     var emailInput: String by remember {
                         mutableStateOf(value = "")
                     }
                     TextField(
                         value = emailInput,
-                        onValueChange = { emailInput = it },
+                        onValueChange = {
+                            emailInput = it
+                            viewModel.updateEmail(emailInput = emailInput)
+                            runBlocking {
+                                viewModel.getUser(emailInput = emailInput)
+                            }
+                        },
                         modifier = Modifier
                             .padding(
                                 start = 16.dp,
@@ -114,17 +128,24 @@ fun LoginScreen(
                                 color = HighlightColor.charcoalGray,
                             )
                         },
-                        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            imeAction = ImeAction.Next,
+                            capitalization = KeyboardCapitalization.None
+                        )
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    //Password login input field
                     var passwordInput: String by remember {
                         mutableStateOf(value = "")
                     }
                     TextField(
                         value = passwordInput,
-                        onValueChange = { passwordInput = it },
+                        onValueChange = {
+                            passwordInput = it
+                            viewModel.updatePassword(passwordInput = passwordInput)
+                        },
                         modifier = Modifier
                             .padding(
                                 start = 16.dp,
@@ -153,19 +174,37 @@ fun LoginScreen(
                                 color = HighlightColor.charcoalGray
                             )
                         },
-                        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done)
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            imeAction = ImeAction.Done,
+                            capitalization = KeyboardCapitalization.None
+                        )
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
 
+                    //Log in button
                     FinishButton(
                         strSrc = R.string.login_button,
                         action = {
-                            navController.navigate(route = "HomeScreen") {
-                                popUpTo(id = 0)
-                            }
+                            if (
+                                viewModel.isLoginSuccessfully()
+                            ) {
+                                navController.navigate(route = "HomeScreen") {
+                                    popUpTo(id = 0)
+                                }
+                            } else showWarning = true
                         }
                     )
+
+                    //Warning
+                    if (showWarning) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "Email is or password was wrong",
+                            style = paragraphText.fontScale(),
+                            color = HighlightColor.charcoalGray
+                        )
+                    }
                 }
             }
         }
@@ -176,10 +215,13 @@ fun LoginScreen(
             )
         }
 
+        //Create a new account button
         item {
             FinishButton(
                 strSrc = R.string.create_new_account_button,
-                action = { navController.navigate(route = "OnboardingScreen") },
+                action = {
+                    navController.navigate(route = "OnboardingScreen")
+                },
                 isFilledButton = false
             )
         }
