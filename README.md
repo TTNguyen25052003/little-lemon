@@ -23,4 +23,8 @@ The project followed the MVVM design pattern:
 * [Ktor network library](https://ktor.io/)
 * [DI (Dependency Injection)](https://developer.android.com/training/dependency-injection)
 
+![App architecture](https://github.com/TTNguyen25052003/little-lemon/blob/master/app_architecture.svg "Figure 1")
 
+## User flow
+
+![User flow](https://github.com/TTNguyen25052003/little-lemon/blob/master/user_flow.svg)
