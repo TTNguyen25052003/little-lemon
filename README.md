@@ -15,7 +15,7 @@ Minimum API required 31 (Android 12)
 ## Project setup
 ### Clone the Repository
     git clone https://github.com/TTNguyen25052003/little-lemon.git
-_*Android Studio is required (recommended)_
+_*Android Studio is recommended_
 ### Figma resource
 #### [Figma design](https://www.figma.com/file/juVo9O62KFNwLhCMNpayu9/Canva?type=design&node-id=0%3A1&mode=design&t=J8nH3Zblxgy4dHib-1)
 #### [Figma prototype](https://www.figma.com/proto/juVo9O62KFNwLhCMNpayu9/Canva?type=design&node-id=0-1&t=J8nH3Zblxgy4dHib-0&scaling=min-zoom&starting-point-node-id=121%3A273)
