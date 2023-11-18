@@ -7,7 +7,7 @@
 
 ## Description
 
-The project is used to test the comprehension of the topics covered and the skills applied throughout the course.
+The project tests the comprehension of the topics covered and the skills applied throughout the course.
 
 ## Project setup
 ### Clone the Repository
@@ -22,10 +22,6 @@ The project followed the MVVM design pattern:
 * [Room](https://developer.android.com/jetpack/androidx/releases/room)
 * [Ktor network library](https://ktor.io/)
 * [DI (Dependency Injection)](https://developer.android.com/training/dependency-injection)
-
-![App architecture](https://github.com/TTNguyen25052003/little-lemon/blob/master/app_architecture.svg "Figure 1" width = "0.5" height = "0.5")
-
-## User flow
 
 ### App architecture
 
