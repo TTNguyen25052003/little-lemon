@@ -40,7 +40,7 @@ The project followed the MVVM design pattern:
 
 ## App screenshot
 <p align="center">
-  <img src="https://github.com/TTNguyen25052003/little-lemon/blob/master/home_screen.png" alt="Home screen" style="margin-right: 30px;">
-  <img src="https://github.com/TTNguyen25052003/little-lemon/blob/master/login_screen.png" alt="Login screen" style="margin-left: 30px;">
+  <img src="https://github.com/TTNguyen25052003/little-lemon/blob/master/home_screen.png" alt="Home screen" style="margin-right: 00px; width: 20%; height: 20%;">
+  <img src="https://github.com/TTNguyen25052003/little-lemon/blob/master/login_screen.png" alt="Login screen" style="margin-left: 00px; width: 20%; height: 20%;">
 </p>
 
