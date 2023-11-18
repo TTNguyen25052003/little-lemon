@@ -3,7 +3,7 @@
 
 ## Problem
 
- Adrian, the owner of Little Lemon Restaurant, has seen a steady decline of take out orders across the past several months. After soliciting feedback, he found that many customers prefer the convenience of a mobile application rather than ordering through the phone. As such, Adrian has hired you to create an app that will provide customers with a pleasant and user friendly experience for ordering food. On the functional side, this entails implementing intuitive navigation and customizability. While behind the scenes, you'll need to consider things such as component layouts and where your data comes from.
+  Adrian, the owner of Little Lemon Restaurant, has seen a steady decline of take out orders across the past several months. After soliciting feedback, he found that many customers prefer the convenience of a mobile application rather than ordering through the phone. As such, Adrian has hired you to create an app that will provide customers with a pleasant and user friendly experience for ordering food. On the functional side, this entails implementing intuitive navigation and customizability. While behind the scenes, you'll need to consider things such as component layouts and where your data comes from.
 
 ## Description
 
@@ -28,6 +28,7 @@ The project followed the MVVM design pattern:
 * [Room](https://developer.android.com/jetpack/androidx/releases/room)
 * [Ktor network library](https://ktor.io/)
 * [DI (Dependency Injection)](https://developer.android.com/training/dependency-injection)
+* [Jetpack Navigation](https://developer.android.com/jetpack/androidx/releases/navigation)
 
 ### App architecture
 
