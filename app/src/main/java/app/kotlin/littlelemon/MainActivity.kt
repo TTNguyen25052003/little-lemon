@@ -1,7 +1,6 @@
 package app.kotlin.littlelemon
 
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,10 +13,8 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.core.view.WindowCompat
 import app.kotlin.littlelemon.ui.AppScreen
-import io.ktor.util.converters.DelegatingConversionService
 
 
 class MainActivity : ComponentActivity() {
@@ -25,10 +22,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
-            val localConfiguration = LocalConfiguration.current
-            if (localConfiguration.orientation == Configuration.ORIENTATION_LANDSCAPE){
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-            }
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
             val modifier: Modifier = Modifier
                 .fillMaxSize()
                 .windowInsetsPadding(insets = WindowInsets.statusBars)
