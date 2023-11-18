@@ -27,4 +27,14 @@ The project followed the MVVM design pattern:
 
 ## User flow
 
-![User flow](https://github.com/TTNguyen25052003/little-lemon/blob/master/user_flow.svg)
+### App architecture
+
+<p align="center">
+  <img src="https://github.com/TTNguyen25052003/little-lemon/blob/master/app_architecture.svg" alt="App architecture" width="50%" height="50%">
+</p>
+
+## User flow
+
+<p align="center">
+  <img src="https://github.com/TTNguyen25052003/little-lemon/blob/master/user_flow.svg" alt="User flow" width="50%" height="50%">
+</p>
