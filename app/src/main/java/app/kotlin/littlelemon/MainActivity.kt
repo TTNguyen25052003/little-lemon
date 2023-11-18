@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             val modifier: Modifier = Modifier
                 .fillMaxSize()
                 .windowInsetsPadding(insets = WindowInsets.statusBars)
