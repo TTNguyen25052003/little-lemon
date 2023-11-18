@@ -24,7 +24,8 @@ sealed interface ConnectionState {
 
 data class HomeScreenUiState(
     val listOfFoodItem: ListOfFoodItem = ListOfFoodItem(menu = emptyList()),
-    val listOfFilterStatus: List<Boolean> = listOf(false, false, false, false)
+    val listOfFilterStatus: List<Boolean> = listOf(false, false, false, false),
+    val foodChosenIndex: Int = 0
 )
 
 class HomeScreenViewModel(
@@ -125,6 +126,12 @@ class HomeScreenViewModel(
                     )
                 }
             }
+        }
+    }
+
+    val chooseFoodItemAction: (Int) -> Unit = { index ->
+        _uiState.update {
+            currentState -> currentState.copy(foodChosenIndex = index)
         }
     }
 }

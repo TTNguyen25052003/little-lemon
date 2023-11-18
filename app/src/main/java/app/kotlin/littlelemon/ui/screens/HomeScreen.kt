@@ -1,6 +1,5 @@
 package app.kotlin.littlelemon.ui.screens
 
-import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -53,12 +52,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import app.kotlin.littlelemon.R
 import app.kotlin.littlelemon.data.FoodItem
 import app.kotlin.littlelemon.data.ListOfFoodItem
-import app.kotlin.littlelemon.di.LittleLemonRepository
 import app.kotlin.littlelemon.ui.theme.HighlightColor
 import app.kotlin.littlelemon.ui.theme.PrimaryColor
 import app.kotlin.littlelemon.ui.theme.SecondaryColor
@@ -73,19 +70,14 @@ import app.kotlin.littlelemon.ui.theme.subTitle
 import app.kotlin.littlelemon.ui.viewmodels.ConnectionState
 import app.kotlin.littlelemon.ui.viewmodels.HomeScreenUiState
 import app.kotlin.littlelemon.ui.viewmodels.HomeScreenViewModel
-import app.kotlin.littlelemon.ui.viewmodels.HomeScreenViewModelFactory
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import kotlinx.coroutines.runBlocking
 
 @Composable
 fun HomeScreen(
-    context: Context,
     navController: NavController,
-    viewModel: HomeScreenViewModel = viewModel(
-        factory = HomeScreenViewModelFactory(
-            littleLemonRepository = LittleLemonRepository(context = context)
-        )
-    ),
+    viewModel:HomeScreenViewModel,
     modifier: Modifier
 ) {
     val homeScreenUiState: State<HomeScreenUiState> = viewModel.uiState.collectAsState()
@@ -156,7 +148,9 @@ fun HomeScreen(
             ListOfFoodItemColumn(
                 connectionState = viewModel.connectionState,
                 listOfFoodItem = homeScreenUiState.value.listOfFoodItem,
-                retryAction = { viewModel.getListOfFoodItem() }
+                retryAction = { viewModel.getListOfFoodItem() },
+                navController = navController,
+                viewModel = viewModel
             )
         }
 
@@ -289,7 +283,7 @@ fun Introduction(action: (String) -> Unit) {
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        //SearchField
+        //Search bar
         var searchPhrase: String by remember {
             mutableStateOf(value = "")
         }
@@ -324,7 +318,8 @@ fun Introduction(action: (String) -> Unit) {
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Done,
                 capitalization = KeyboardCapitalization.None
-            )
+            ),
+            singleLine = true
         )
     }
 }
@@ -427,7 +422,9 @@ fun SectionCategoryTag(
 fun ListOfFoodItemColumn(
     connectionState: ConnectionState,
     listOfFoodItem: ListOfFoodItem,
-    retryAction: () -> Unit
+    retryAction: () -> Unit,
+    viewModel: HomeScreenViewModel,
+    navController: NavController
 ) {
     when (connectionState) {
         ConnectionState.Loading -> LoadingScreen()
@@ -444,7 +441,13 @@ fun ListOfFoodItemColumn(
             ) {
                 for (i: Int in listOfFoodItem.menu.indices) {
                     FoodItemTag(
-                        listOfFoodItem.menu[i]
+                        listOfFoodItem.menu[i],
+                        onClickAction = {
+                            runBlocking {
+                                viewModel.chooseFoodItemAction(i)
+                            }
+                            navController.navigate(route = "FoodItemScreen")
+                        }
                     )
                 }
             }
@@ -452,85 +455,96 @@ fun ListOfFoodItemColumn(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FoodItemTag(
     foodItem: FoodItem,
+    onClickAction: () -> Unit
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = HighlightColor.platinumGray)
-            .padding(
-                start = 20.dp,
-                end = 20.dp,
-                top = 16.dp,
-                bottom = 16.dp
-            ),
+    Card(
+        onClick = onClickAction,
+        shape = RectangleShape,
+        colors  = CardDefaults.cardColors(
+            containerColor = Color.Transparent
+        )
     ) {
-        Card(
-            modifier = Modifier
-                .width(80.dp)
-                .height(80.dp)
-                .align(alignment = Alignment.CenterEnd),
-            shape = RectangleShape,
-            colors = CardDefaults.cardColors(
-                containerColor = Color.Transparent
-            )
-        ) {
-            AsyncImage(
-                model = ImageRequest.Builder(context = LocalContext.current)
-                    .data(foodItem.image)
-                    .crossfade(enable = true)
-                    .build(),
-                contentDescription = "",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop,
-                placeholder = painterResource(id = R.drawable.image_placeholder)
-            )
-        }
-
-        Column(
-            verticalArrangement = Arrangement.SpaceBetween,
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(end = 24.dp)
-                .align(Alignment.CenterStart)
-                .height(80.dp),
+                .background(color = HighlightColor.platinumGray)
+                .padding(
+                    start = 20.dp,
+                    end = 20.dp,
+                    top = 16.dp,
+                    bottom = 16.dp
+                ),
         ) {
-            Column {
-                Text(
-                    text = foodItem.title,
-                    style = cardTitle.fontScale(),
-                    color = HighlightColor.charcoalGray
+            Card(
+                modifier = Modifier
+                    .width(80.dp)
+                    .height(80.dp)
+                    .align(alignment = Alignment.CenterEnd),
+                shape = RectangleShape,
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.Transparent
                 )
-                Text(
-                    text = foodItem.description,
-                    style = paragraphText.fontScale(),
-                    color = HighlightColor.charcoalGray,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = 80.dp),
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
+            ) {
+                AsyncImage(
+                    model = ImageRequest.Builder(context = LocalContext.current)
+                        .data(foodItem.image)
+                        .crossfade(enable = true)
+                        .build(),
+                    contentDescription = "",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(id = R.drawable.image_placeholder)
                 )
             }
-            Row(verticalAlignment = Alignment.Bottom) {
-                Text(
-                    text = stringResource(id = R.string.price_title),
-                    style = cardTitle.fontScale(),
-                    color = HighlightColor.charcoalGray
-                )
 
-                Spacer(modifier = Modifier.width(8.dp))
+            Column(
+                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 24.dp)
+                    .align(Alignment.CenterStart)
+                    .height(80.dp),
+            ) {
+                Column {
+                    Text(
+                        text = foodItem.title,
+                        style = cardTitle.fontScale(),
+                        color = HighlightColor.charcoalGray
+                    )
+                    Text(
+                        text = foodItem.description,
+                        style = paragraphText.fontScale(),
+                        color = HighlightColor.charcoalGray,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 80.dp),
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
+                    )
+                }
+                Row(verticalAlignment = Alignment.Bottom) {
+                    Text(
+                        text = stringResource(id = R.string.price_title),
+                        style = cardTitle.fontScale(),
+                        color = HighlightColor.charcoalGray
+                    )
 
-                Text(
-                    text = foodItem.price,
-                    style = highlightText.fontScale(),
-                    color = HighlightColor.charcoalGray
-                )
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Text(
+                        text = foodItem.price,
+                        style = highlightText.fontScale(),
+                        color = HighlightColor.charcoalGray
+                    )
+                }
             }
         }
     }
+
 }
 
 @Composable

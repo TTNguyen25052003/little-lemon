@@ -249,6 +249,7 @@ fun InputSection(
                     runBlocking(IO) {
                         viewModel.getUser(emailInput = currentInput)
                     }
+                    //
                 }
                 stateUpdateAction(it)
             },
@@ -282,7 +283,7 @@ fun InputSection(
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = imeAction,
                 capitalization = KeyboardCapitalization.None
-            )
+            ),
         )
     }
 }

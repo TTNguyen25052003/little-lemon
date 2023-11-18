@@ -214,7 +214,8 @@ fun InfoSection(
                 unfocusedIndicatorColor = Color.Transparent,
                 textColor = HighlightColor.charcoalGray
             ),
-            textStyle = paragraphText.fontScale()
+            textStyle = paragraphText.fontScale(),
+            singleLine = true
         )
     }
 }

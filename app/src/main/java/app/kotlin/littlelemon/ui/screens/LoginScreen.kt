@@ -131,7 +131,8 @@ fun LoginScreen(
                         keyboardOptions = KeyboardOptions.Default.copy(
                             imeAction = ImeAction.Next,
                             capitalization = KeyboardCapitalization.None
-                        )
+                        ),
+                        singleLine = true
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -177,7 +178,8 @@ fun LoginScreen(
                         keyboardOptions = KeyboardOptions.Default.copy(
                             imeAction = ImeAction.Done,
                             capitalization = KeyboardCapitalization.None
-                        )
+                        ),
+                        singleLine = true
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
