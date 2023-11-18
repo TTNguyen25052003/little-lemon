@@ -24,7 +24,7 @@ class OnboardingScreenViewModel(
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
     //It used to check if email of _uiState is exist
-    var userGot = User()
+    private var userGot = User()
 
     private fun updateFirstname(firstnameInput: String) {
         _uiState.update { currentState ->

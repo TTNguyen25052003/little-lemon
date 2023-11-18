@@ -186,9 +186,7 @@ fun LoginScreen(
                     FinishButton(
                         strSrc = R.string.login_button,
                         action = {
-                            if (
-                                viewModel.isLoginSuccessfully()
-                            ) {
+                            if (viewModel.isLoginSuccessfully()) {
                                 navController.navigate(route = "HomeScreen") {
                                     popUpTo(id = 0)
                                 }

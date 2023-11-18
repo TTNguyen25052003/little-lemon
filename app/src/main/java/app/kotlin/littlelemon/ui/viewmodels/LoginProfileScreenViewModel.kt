@@ -7,8 +7,6 @@ import app.kotlin.littlelemon.data.User
 import app.kotlin.littlelemon.di.LittleLemonRepository
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -43,7 +41,7 @@ class LoginProfileScreenViewModel(
 
     fun isLoginSuccessfully(): Boolean {
         if (userGot != User()) {
-            return userGot.password != _uiState.value.user.password
+            return userGot.password == _uiState.value.user.password
         }
         return false
     }
