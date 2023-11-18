@@ -1,4 +1,4 @@
-# Little Lemon
+# Little Lemon (Guided by Meta staff)
 [Click here to see the course](https://www.coursera.org/learn/android-app-capstone)
 
 ## Problem
@@ -13,6 +13,9 @@ The project tests the comprehension of the topics covered and the skills applied
 ### Clone the Repository
     git clone https://github.com/TTNguyen25052003/little-lemon.git
 _*Android Studio is required (recommended)_
+### Figma resource
+#### [Figma design](https://www.figma.com/file/juVo9O62KFNwLhCMNpayu9/Canva?type=design&node-id=0%3A1&mode=design&t=J8nH3Zblxgy4dHib-1)
+#### [Figma prototype](https://www.figma.com/proto/juVo9O62KFNwLhCMNpayu9/Canva?type=design&node-id=0-1&t=J8nH3Zblxgy4dHib-0&scaling=min-zoom&starting-point-node-id=121%3A273)
 
 ## Project documentation
 
