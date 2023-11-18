@@ -8,6 +8,7 @@
 ## Description
 
 The project tests the comprehension of the topics covered and the skills applied throughout the course.
+
 Minimum API required 31 (Android 12)
 [Download APK here](https://drive.usercontent.google.com/download?id=1Uv3qMuzPOGcD71M78eM2zRjgIDwFfV05&export=download&authuser=0&confirm=t&uuid=d666e9be-9975-421c-bb19-a69f7d1935e5&at=APZUnTVJScrZAMrd8t9B2j5_iYh7:1700326044247) (Make sure your phone allows to install from unknown resource)
 ## Project setup
