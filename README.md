@@ -27,7 +27,6 @@ The project followed the MVVM design pattern:
 * [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)
 * [Room](https://developer.android.com/jetpack/androidx/releases/room)
 * [Ktor network library](https://ktor.io/)
-* [DI (Dependency Injection)](https://developer.android.com/training/dependency-injection)
 * [Jetpack Navigation](https://developer.android.com/jetpack/androidx/releases/navigation)
 
 ### App architecture
