@@ -10,17 +10,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import app.kotlin.littlelemon.R
-import app.kotlin.littlelemon.data.LocalUsersRepository
-import app.kotlin.littlelemon.data.NetWorkListOfFoodItemsRepository
 import app.kotlin.littlelemon.ui.screens.FoodItemScreen
 import app.kotlin.littlelemon.ui.screens.HomeScreen
 import app.kotlin.littlelemon.ui.screens.LoginScreen
 import app.kotlin.littlelemon.ui.screens.OnboardingScreen
 import app.kotlin.littlelemon.ui.screens.ProfileScreen
 import app.kotlin.littlelemon.ui.viewmodels.HomeScreenViewModel
-import app.kotlin.littlelemon.ui.viewmodels.HomeScreenViewModelFactory
 import app.kotlin.littlelemon.ui.viewmodels.LoginProfileScreenViewModel
-import app.kotlin.littlelemon.ui.viewmodels.LoginProfileScreenViewModelFactory
 
 @Composable
 fun AppScreen(
@@ -42,17 +38,10 @@ fun AppScreen(
     )
 
 
-    val loginProfileViewModel: LoginProfileScreenViewModel = viewModel(
-        factory = LoginProfileScreenViewModelFactory(
-            usersRepository = LocalUsersRepository(context = context)
-        )
-    )
+    val loginProfileViewModel: LoginProfileScreenViewModel =
+        viewModel(factory = LoginProfileScreenViewModel.Factory)
 
-    val homeScreenViewModel: HomeScreenViewModel = viewModel(
-        factory = HomeScreenViewModelFactory(
-            listOfFoodItemsRepository = NetWorkListOfFoodItemsRepository()
-        )
-    )
+    val homeScreenViewModel: HomeScreenViewModel = viewModel(factory = HomeScreenViewModel.Factory)
 
     NavHost(
         navController = navController,
@@ -96,7 +85,7 @@ fun AppScreen(
             )
         }
 
-        composable(route = "FoodItemScreen"){
+        composable(route = "FoodItemScreen") {
             FoodItemScreen(
                 navController = navController,
                 viewModel = homeScreenViewModel,

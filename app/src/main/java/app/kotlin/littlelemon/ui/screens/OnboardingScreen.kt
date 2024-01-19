@@ -62,11 +62,7 @@ fun OnboardingScreen(
     listOfLabel: List<String>,
     listOfPlaceholder: List<String>,
     navController: NavController,
-    viewModel: OnboardingScreenViewModel = viewModel(
-        factory = OnboardingScreenViewModelFactory(
-            usersRepository = LocalUsersRepository(context = context)
-        )
-    ),
+    viewModel: OnboardingScreenViewModel = viewModel(factory = OnboardingScreenViewModel.Factory),
     modifier: Modifier,
 ) {
     val uiState: State<UiState> = viewModel.uiState.collectAsState()

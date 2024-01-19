@@ -5,7 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import app.kotlin.littlelemon.LittleLemonApplication
 import app.kotlin.littlelemon.data.ListOfFoodItemsRepository
 import app.kotlin.littlelemon.model.ListOfFoodItem
 import coil.network.HttpException
@@ -134,12 +138,16 @@ class HomeScreenViewModel(
             currentState.copy(foodChosenIndex = index)
         }
     }
-}
 
-@Suppress("UNCHECKED_CAST")
-class HomeScreenViewModelFactory(private val listOfFoodItemsRepository: ListOfFoodItemsRepository) :
-    ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return HomeScreenViewModel(listOfFoodItemsRepository) as T
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application: LittleLemonApplication =
+                    (this[APPLICATION_KEY] as LittleLemonApplication)
+                val listOfFoodItemsRepository: ListOfFoodItemsRepository =
+                    application.container.listOfFoodItemsRepository
+                HomeScreenViewModel(listOfFoodItemsRepository = listOfFoodItemsRepository)
+            }
+        }
     }
 }

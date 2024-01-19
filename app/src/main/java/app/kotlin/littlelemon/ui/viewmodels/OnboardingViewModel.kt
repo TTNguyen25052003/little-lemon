@@ -2,7 +2,11 @@ package app.kotlin.littlelemon.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import app.kotlin.littlelemon.LittleLemonApplication
 import app.kotlin.littlelemon.data.User
 import app.kotlin.littlelemon.data.UsersRepository
 import kotlinx.coroutines.Dispatchers.IO
@@ -115,12 +119,15 @@ class OnboardingScreenViewModel(private val usersRepository: UsersRepository) : 
             usersRepository.createAccount(user = _uiState.value.user)
         }
     }
-}
 
-@Suppress("UNCHECKED_CAST")
-class OnboardingScreenViewModelFactory(private val usersRepository: UsersRepository) :
-    ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return OnboardingScreenViewModel(usersRepository) as T
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application: LittleLemonApplication =
+                    (this[APPLICATION_KEY] as LittleLemonApplication)
+                val usersRepository: UsersRepository = application.container.usersRepository
+                OnboardingScreenViewModel(usersRepository = usersRepository)
+            }
+        }
     }
 }
