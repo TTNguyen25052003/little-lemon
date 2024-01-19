@@ -88,17 +88,13 @@ fun LoginScreen(
 
                     // Email login input field
 
-                    var emailInput: String by remember {
-                        mutableStateOf(value = "")
-                    }
+                    var emailInput: String by remember { mutableStateOf(value = "") }
                     TextField(
                         value = emailInput,
                         onValueChange = {
                             emailInput = it
                             viewModel.updateEmail(emailInput = emailInput)
-                            runBlocking {
-                                viewModel.getUser(emailInput = emailInput)
-                            }
+                            runBlocking { viewModel.getUser(emailInput = emailInput) }
                         },
                         modifier = Modifier
                             .padding(
@@ -138,9 +134,7 @@ fun LoginScreen(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     //Password login input field
-                    var passwordInput: String by remember {
-                        mutableStateOf(value = "")
-                    }
+                    var passwordInput: String by remember { mutableStateOf(value = "") }
                     TextField(
                         value = passwordInput,
                         onValueChange = {
@@ -189,10 +183,10 @@ fun LoginScreen(
                         strSrc = R.string.login_button,
                         action = {
                             if (viewModel.isLoginSuccessfully()) {
-                                navController.navigate(route = "HomeScreen") {
-                                    popUpTo(id = 0)
-                                }
-                            } else showWarning = true
+                                navController.navigate(route = "HomeScreen") { popUpTo(id = 0) }
+                            } else {
+                                showWarning = true
+                            }
                         }
                     )
 
@@ -209,24 +203,16 @@ fun LoginScreen(
             }
         }
 
-        item {
-            Spacer(
-                modifier = Modifier.height(((screenHeight - 464) / 2 - 48 - 20).dp)
-            )
-        }
+        item { Spacer(modifier = Modifier.height(((screenHeight - 464) / 2 - 48 - 20).dp)) }
 
         //Create a new account button
         item {
             FinishButton(
                 strSrc = R.string.create_new_account_button,
-                action = {
-                    navController.navigate(route = "OnboardingScreen")
-                },
+                action = { navController.navigate(route = "OnboardingScreen") },
                 isFilledButton = false
             )
         }
-        item {
-            Spacer(modifier = Modifier.height(20.dp))
-        }
+        item { Spacer(modifier = Modifier.height(20.dp)) }
     }
 }

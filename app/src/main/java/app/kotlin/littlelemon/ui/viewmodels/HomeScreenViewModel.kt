@@ -6,8 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import app.kotlin.littlelemon.data.ListOfFoodItem
-import app.kotlin.littlelemon.di.LittleLemonRepository
+import app.kotlin.littlelemon.data.ListOfFoodItemsRepository
+import app.kotlin.littlelemon.model.ListOfFoodItem
 import coil.network.HttpException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,7 +29,7 @@ data class HomeScreenUiState(
 )
 
 class HomeScreenViewModel(
-    private val littleLemonRepository: LittleLemonRepository
+    private val listOfFoodItemsRepository: ListOfFoodItemsRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeScreenUiState())
     val uiState: StateFlow<HomeScreenUiState> = _uiState.asStateFlow()
@@ -50,7 +50,7 @@ class HomeScreenViewModel(
         viewModelScope.launch {
             try {
                 connectionState = ConnectionState.Loading
-                val result: ListOfFoodItem = littleLemonRepository.getListOfFoodItem()
+                val result: ListOfFoodItem = listOfFoodItemsRepository.getListOfFoodItem()
                 _listOfFoodItem = result
                 updateListOfFoodItem(listOfFoodItem = _listOfFoodItem)
                 connectionState = ConnectionState.Successful
@@ -130,16 +130,16 @@ class HomeScreenViewModel(
     }
 
     val chooseFoodItemAction: (Int) -> Unit = { index ->
-        _uiState.update {
-            currentState -> currentState.copy(foodChosenIndex = index)
+        _uiState.update { currentState ->
+            currentState.copy(foodChosenIndex = index)
         }
     }
 }
 
 @Suppress("UNCHECKED_CAST")
-class HomeScreenViewModelFactory(private val littleLemonRepository: LittleLemonRepository) :
+class HomeScreenViewModelFactory(private val listOfFoodItemsRepository: ListOfFoodItemsRepository) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return HomeScreenViewModel(littleLemonRepository) as T
+        return HomeScreenViewModel(listOfFoodItemsRepository) as T
     }
 }

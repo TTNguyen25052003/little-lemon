@@ -54,8 +54,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import app.kotlin.littlelemon.R
-import app.kotlin.littlelemon.data.FoodItem
-import app.kotlin.littlelemon.data.ListOfFoodItem
+import app.kotlin.littlelemon.model.FoodItem
+import app.kotlin.littlelemon.model.ListOfFoodItem
 import app.kotlin.littlelemon.ui.theme.HighlightColor
 import app.kotlin.littlelemon.ui.theme.PrimaryColor
 import app.kotlin.littlelemon.ui.theme.SecondaryColor
@@ -77,38 +77,24 @@ import kotlinx.coroutines.runBlocking
 @Composable
 fun HomeScreen(
     navController: NavController,
-    viewModel:HomeScreenViewModel,
+    viewModel: HomeScreenViewModel,
     modifier: Modifier
 ) {
     val homeScreenUiState: State<HomeScreenUiState> = viewModel.uiState.collectAsState()
     LazyColumn(modifier = modifier) {
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-        }
+        item { Spacer(modifier = Modifier.height(16.dp)) }
 
-        item {
-            TopBar(navController = navController)
-        }
+        item { TopBar(navController = navController) }
 
-        item {
-            Spacer(modifier = Modifier.height(20.dp))
-        }
+        item { Spacer(modifier = Modifier.height(20.dp)) }
 
-        item {
-            Introduction(action = viewModel.searchAction)
-        }
+        item { Introduction(action = viewModel.searchAction) }
 
-        item {
-            Spacer(modifier = Modifier.height(8.dp))
-        }
+        item { Spacer(modifier = Modifier.height(8.dp)) }
 
-        item {
-            OrderForDelivery()
-        }
+        item { OrderForDelivery() }
 
-        item {
-            Spacer(modifier = Modifier.height(8.dp))
-        }
+        item { Spacer(modifier = Modifier.height(8.dp)) }
 
         item {
             SectionCategory(
@@ -118,14 +104,10 @@ fun HomeScreen(
             )
         }
 
-        item {
-            Spacer(modifier = Modifier.height(20.dp))
-        }
+        item { Spacer(modifier = Modifier.height(20.dp)) }
 
         item {
-            Canvas(
-                modifier = Modifier.fillMaxWidth()
-            ) {
+            Canvas(modifier = Modifier.fillMaxWidth()) {
                 val canvasWidth: Float = size.width
                 drawLine(
                     color = Color.Black,
@@ -154,9 +136,7 @@ fun HomeScreen(
             )
         }
 
-        item {
-            Spacer(modifier = Modifier.height(20.dp))
-        }
+        item { Spacer(modifier = Modifier.height(20.dp)) }
     }
 }
 
@@ -194,9 +174,7 @@ fun TopBar(navController: NavController) {
                 width = (0.2).dp,
                 color = HighlightColor.charcoalGray
             ),
-            onClick = {
-                navController.navigate(route = "ProfileScreen")
-            },
+            onClick = { navController.navigate(route = "ProfileScreen") },
             colors = CardDefaults.cardColors(
                 containerColor = Color.Transparent
             )
@@ -284,17 +262,14 @@ fun Introduction(action: (String) -> Unit) {
         Spacer(modifier = Modifier.height(40.dp))
 
         //Search bar
-        var searchPhrase: String by remember {
-            mutableStateOf(value = "")
-        }
+        var searchPhrase: String by remember { mutableStateOf(value = "") }
         TextField(
             value = searchPhrase,
             onValueChange = {
                 searchPhrase = it
                 action(it)
             },
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(10.dp),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color.White,
@@ -464,7 +439,7 @@ fun FoodItemTag(
     Card(
         onClick = onClickAction,
         shape = RectangleShape,
-        colors  = CardDefaults.cardColors(
+        colors = CardDefaults.cardColors(
             containerColor = Color.Transparent
         )
     ) {
@@ -544,7 +519,6 @@ fun FoodItemTag(
             }
         }
     }
-
 }
 
 @Composable

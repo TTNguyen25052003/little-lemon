@@ -48,7 +48,7 @@ fun ProfileScreen(
     listOfLabel: List<String>,
     navController: NavController,
     viewModel: LoginProfileScreenViewModel,
-    modifier:Modifier
+    modifier: Modifier
 ) {
     LazyColumn(
         modifier = modifier,
@@ -79,9 +79,7 @@ fun ProfileScreen(
             }
         }
 
-        item {
-            Spacer(modifier = Modifier.height(20.dp))
-        }
+        item { Spacer(modifier = Modifier.height(20.dp)) }
 
         //User avatar
         item {
@@ -94,9 +92,7 @@ fun ProfileScreen(
                     width = (0.2).dp,
                     color = HighlightColor.charcoalGray.copy(alpha = 0.2f)
                 ),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.Transparent
-                )
+                colors = CardDefaults.cardColors(containerColor = Color.Transparent)
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.avatar),
@@ -107,9 +103,7 @@ fun ProfileScreen(
             }
         }
 
-        item {
-            Spacer(modifier = Modifier.height(40.dp))
-        }
+        item { Spacer(modifier = Modifier.height(40.dp)) }
 
         item {
             InfoField(
@@ -122,25 +116,19 @@ fun ProfileScreen(
             )
         }
 
-        item {
-            Spacer(modifier = Modifier.height(48.dp))
-        }
+        item { Spacer(modifier = Modifier.height(48.dp)) }
 
         item {
             FinishButton(
                 strSrc = R.string.logout_button,
                 action = {
                     viewModel.resetState()
-                    navController.navigate(route = "LoginScreen") {
-                        popUpTo(id = 0)
-                    }
+                    navController.navigate(route = "LoginScreen") { popUpTo(id = 0) }
                 }
             )
         }
 
-        item {
-            Spacer(modifier = Modifier.height(20.dp))
-        }
+        item { Spacer(modifier = Modifier.height(20.dp)) }
     }
 }
 

@@ -1,5 +1,6 @@
-package app.kotlin.littlelemon.data
+package app.kotlin.littlelemon.network
 
+import app.kotlin.littlelemon.model.ListOfFoodItem
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.android.Android
@@ -7,7 +8,6 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 private const val BASE_URL =
@@ -18,21 +18,6 @@ private val httpClient: HttpClient = HttpClient(Android) {
         json(contentType = ContentType(contentType = "application", contentSubtype = "json"))
     }
 }
-
-@Serializable
-data class ListOfFoodItem(
-    val menu: List<FoodItem>
-)
-
-@Serializable
-data class FoodItem(
-    val id: Int,
-    val title: String,
-    val description: String,
-    val price: String,
-    val image: String,
-    val category: String
-)
 
 suspend fun fetchData(): ListOfFoodItem {
     val jsonRawString: String = httpClient.get(BASE_URL).body()

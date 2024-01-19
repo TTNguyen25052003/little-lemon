@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import app.kotlin.littlelemon.R
-import app.kotlin.littlelemon.di.LittleLemonRepository
+import app.kotlin.littlelemon.data.LocalUsersRepository
 import app.kotlin.littlelemon.ui.theme.HighlightColor
 import app.kotlin.littlelemon.ui.theme.PrimaryColor
 import app.kotlin.littlelemon.ui.theme.fontScale
@@ -64,7 +64,7 @@ fun OnboardingScreen(
     navController: NavController,
     viewModel: OnboardingScreenViewModel = viewModel(
         factory = OnboardingScreenViewModelFactory(
-            littleLemonRepository = LittleLemonRepository(context = context)
+            usersRepository = LocalUsersRepository(context = context)
         )
     ),
     modifier: Modifier,
@@ -75,9 +75,7 @@ fun OnboardingScreen(
         item {
             Box(modifier = Modifier.fillMaxWidth()) {
                 IconButton(
-                    onClick = {
-                        navController.popBackStack()
-                    },
+                    onClick = { navController.popBackStack() },
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = Color.Transparent,
                         contentColor = HighlightColor.charcoalGray
@@ -98,9 +96,7 @@ fun OnboardingScreen(
         }
         //
 
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-        }
+        item { Spacer(modifier = Modifier.height(16.dp)) }
 
         //LET GET YOU TO KNOW
         item {
@@ -123,9 +119,7 @@ fun OnboardingScreen(
         }
         //
 
-        item {
-            Spacer(modifier = Modifier.height(40.dp))
-        }
+        item { Spacer(modifier = Modifier.height(40.dp)) }
 
         //Input form
         item {
@@ -163,21 +157,19 @@ fun OnboardingScreen(
         }
         //
 
-        item {
-            Spacer(modifier = Modifier.height(48.dp))
-        }
+        item { Spacer(modifier = Modifier.height(48.dp)) }
 
         //Finish button
         item {
             Column {
-                val isCompletedInputField: Boolean = !uiState.value.listOfValidation
+                val isCompletedInputField: Boolean = !uiState
+                    .value
+                    .listOfValidation
                     .contains(element = false)
                 FinishButton(
                     strSrc = R.string.register_button,
                     action = {
-                        runBlocking {
-                            viewModel.createAccount()
-                        }
+                        runBlocking { viewModel.createAccount() }
                         navController.popBackStack()
                     },
                     canPress = isCompletedInputField
@@ -186,9 +178,7 @@ fun OnboardingScreen(
         }
         //
 
-        item {
-            Spacer(modifier = Modifier.height(20.dp))
-        }
+        item { Spacer(modifier = Modifier.height(20.dp)) }
     }
 }
 
@@ -202,17 +192,10 @@ fun InputSection(
     viewModel: OnboardingScreenViewModel,
     showWarningValue: Boolean
 ) {
-    var currentInput: String by remember {
-        mutableStateOf(value = "")
-    }
+    var currentInput: String by remember { mutableStateOf(value = "") }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(),
-    ) {
-        var showWarning: Boolean by remember {
-            mutableStateOf(value = false)
-        }
+    Column(modifier = Modifier.fillMaxWidth()) {
+        var showWarning: Boolean by remember { mutableStateOf(value = false) }
         //label
         showWarning = showWarningValue
         Row {
@@ -245,11 +228,8 @@ fun InputSection(
             onValueChange = {
                 currentInput = it
                 if (label == "Email") {
-                    // This code is make sure that userGot updated before check
-                    runBlocking(IO) {
-                        viewModel.getUser(emailInput = currentInput)
-                    }
-                    //
+                    // This code is make sure that userGot updated before checking
+                    runBlocking(IO) { viewModel.getUser(emailInput = currentInput) }
                 }
                 stateUpdateAction(it)
             },
@@ -273,10 +253,11 @@ fun InputSection(
                 .fillMaxWidth()
                 .border(
                     width = 2.dp,
-                    color = if (showWarning)
+                    color = if (showWarning) {
                         Color.Red
-                    else
-                        HighlightColor.platinumGray,
+                    } else {
+                        HighlightColor.platinumGray
+                    },
                     shape = RoundedCornerShape(10.dp)
                 ),
             textStyle = paragraphText.fontScale(),

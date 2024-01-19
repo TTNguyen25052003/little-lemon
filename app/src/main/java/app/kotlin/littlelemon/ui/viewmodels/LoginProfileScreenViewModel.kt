@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import app.kotlin.littlelemon.data.User
-import app.kotlin.littlelemon.di.LittleLemonRepository
+import app.kotlin.littlelemon.data.UsersRepository
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -14,9 +14,7 @@ data class LoginProfileState(
     val user: User = User()
 )
 
-class LoginProfileScreenViewModel(
-    private val littleLemonViewModel: LittleLemonRepository
-) : ViewModel() {
+class LoginProfileScreenViewModel(private val usersRepository: UsersRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginProfileState())
 
     var userGot = User()
@@ -35,7 +33,7 @@ class LoginProfileScreenViewModel(
 
     fun getUser(emailInput: String) {
         viewModelScope.launch(IO) {
-            userGot = littleLemonViewModel.getUser(emailInput = emailInput) ?: User()
+            userGot = usersRepository.getUser(emailInput = emailInput) ?: User()
         }
     }
 
@@ -55,9 +53,9 @@ class LoginProfileScreenViewModel(
 }
 
 @Suppress("UNCHECKED_CAST")
-class LoginProfileScreenViewModelFactory(private val littleLemonRepository: LittleLemonRepository) :
+class LoginProfileScreenViewModelFactory(private val usersRepository: UsersRepository) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return LoginProfileScreenViewModel(littleLemonRepository) as T
+        return LoginProfileScreenViewModel(usersRepository) as T
     }
 }

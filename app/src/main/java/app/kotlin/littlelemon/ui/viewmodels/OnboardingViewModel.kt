@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import app.kotlin.littlelemon.data.User
-import app.kotlin.littlelemon.di.LittleLemonRepository
+import app.kotlin.littlelemon.data.UsersRepository
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,9 +17,7 @@ data class UiState(
     val listOfValidation: List<Boolean> = listOf(false, false, false, false)
 )
 
-class OnboardingScreenViewModel(
-    private val littleLemonRepository: LittleLemonRepository
-) : ViewModel() {
+class OnboardingScreenViewModel(private val usersRepository: UsersRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
@@ -103,7 +101,7 @@ class OnboardingScreenViewModel(
     )
 
     suspend fun getUser(emailInput: String) {
-        userGot = littleLemonRepository.getUser(emailInput = emailInput) ?: User()
+        userGot = usersRepository.getUser(emailInput = emailInput) ?: User()
     }
 
     //Check if form input data is valid
@@ -114,15 +112,15 @@ class OnboardingScreenViewModel(
 
     fun createAccount() {
         viewModelScope.launch(IO) {
-            littleLemonRepository.createAccount(user = _uiState.value.user)
+            usersRepository.createAccount(user = _uiState.value.user)
         }
     }
 }
 
 @Suppress("UNCHECKED_CAST")
-class OnboardingScreenViewModelFactory(private val littleLemonRepository: LittleLemonRepository) :
+class OnboardingScreenViewModelFactory(private val usersRepository: UsersRepository) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return OnboardingScreenViewModel(littleLemonRepository) as T
+        return OnboardingScreenViewModel(usersRepository) as T
     }
 }

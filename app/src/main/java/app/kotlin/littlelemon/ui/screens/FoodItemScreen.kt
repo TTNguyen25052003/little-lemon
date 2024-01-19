@@ -36,12 +36,8 @@ fun FoodItemScreen(
     modifier: Modifier
 ) {
     val uiState: State<HomeScreenUiState> = viewModel.uiState.collectAsState()
-    Box(
-        modifier = modifier
-    ) {
-        Column(
-            modifier = Modifier.align(alignment = Alignment.TopStart)
-        ) {
+    Box(modifier = modifier) {
+        Column(modifier = Modifier.align(alignment = Alignment.TopStart)) {
             AsyncImage(
                 model = ImageRequest.Builder(context = LocalContext.current)
                     .data(uiState.value.listOfFoodItem.menu[uiState.value.foodChosenIndex].image)

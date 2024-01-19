@@ -10,7 +10,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import app.kotlin.littlelemon.R
-import app.kotlin.littlelemon.di.LittleLemonRepository
+import app.kotlin.littlelemon.data.LocalUsersRepository
+import app.kotlin.littlelemon.data.NetWorkListOfFoodItemsRepository
 import app.kotlin.littlelemon.ui.screens.FoodItemScreen
 import app.kotlin.littlelemon.ui.screens.HomeScreen
 import app.kotlin.littlelemon.ui.screens.LoginScreen
@@ -43,13 +44,13 @@ fun AppScreen(
 
     val loginProfileViewModel: LoginProfileScreenViewModel = viewModel(
         factory = LoginProfileScreenViewModelFactory(
-            littleLemonRepository = LittleLemonRepository(context = context)
+            usersRepository = LocalUsersRepository(context = context)
         )
     )
 
     val homeScreenViewModel: HomeScreenViewModel = viewModel(
         factory = HomeScreenViewModelFactory(
-            littleLemonRepository = LittleLemonRepository(context = context)
+            listOfFoodItemsRepository = NetWorkListOfFoodItemsRepository()
         )
     )
 
