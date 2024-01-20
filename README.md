@@ -11,7 +11,7 @@ The project tests the comprehension of the topics covered and the skills applied
 
 Minimum API required 31 (Android 12)
 
-[Download APK here](https://drive.usercontent.google.com/download?id=1Uv3qMuzPOGcD71M78eM2zRjgIDwFfV05&export=download&authuser=0&confirm=t&uuid=d666e9be-9975-421c-bb19-a69f7d1935e5&at=APZUnTVJScrZAMrd8t9B2j5_iYh7:1700326044247) (Make sure your phone allows to install from unknown resource)
+[Download APK here](https://drive.usercontent.google.com/download?id=1Ot5CHRssKFzaPlh08TIYF-SB2KMamnm1&export=download&authuser=0&confirm=t&uuid=cc75459b-c941-4161-8b83-b13fdc3f6f6e&at=APZUnTUIzFdxfUdfLLolu6OuRC2N:1705728649747) (Make sure your phone allows to install from unknown resource)
 ## Project setup
 ### Clone the Repository
     git clone https://github.com/TTNguyen25052003/little-lemon.git
