@@ -29,10 +29,7 @@ class MainActivity : ComponentActivity() {
                 .windowInsetsPadding(insets = WindowInsets.navigationBars)
                 .windowInsetsPadding(insets = WindowInsets.ime)
                 .background(color = Color.White)
-            AppScreen(
-                modifier = modifier,
-                context = applicationContext
-            )
+            AppScreen(modifier = modifier)
         }
     }
 }

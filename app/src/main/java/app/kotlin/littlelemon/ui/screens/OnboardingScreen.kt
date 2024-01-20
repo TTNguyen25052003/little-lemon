@@ -43,7 +43,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import app.kotlin.littlelemon.R
-import app.kotlin.littlelemon.data.LocalUsersRepository
 import app.kotlin.littlelemon.ui.theme.HighlightColor
 import app.kotlin.littlelemon.ui.theme.PrimaryColor
 import app.kotlin.littlelemon.ui.theme.fontScale
@@ -51,14 +50,12 @@ import app.kotlin.littlelemon.ui.theme.paragraphText
 import app.kotlin.littlelemon.ui.theme.sectionCategory
 import app.kotlin.littlelemon.ui.theme.subTitle
 import app.kotlin.littlelemon.ui.viewmodels.OnboardingScreenViewModel
-import app.kotlin.littlelemon.ui.viewmodels.OnboardingScreenViewModelFactory
 import app.kotlin.littlelemon.ui.viewmodels.UiState
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.runBlocking
 
 @Composable
 fun OnboardingScreen(
-    context: Context,
     listOfLabel: List<String>,
     listOfPlaceholder: List<String>,
     navController: NavController,

@@ -1,6 +1,5 @@
 package app.kotlin.littlelemon.ui
 
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -19,11 +18,9 @@ import app.kotlin.littlelemon.ui.viewmodels.HomeScreenViewModel
 import app.kotlin.littlelemon.ui.viewmodels.LoginProfileScreenViewModel
 
 @Composable
-fun AppScreen(
-    modifier: Modifier,
-    context: Context,
-) {
+fun AppScreen(modifier: Modifier) {
     val navController: NavHostController = rememberNavController()
+
     val listOfLabel: List<String> = listOf(
         stringResource(id = R.string.label_firstname),
         stringResource(id = R.string.label_lastname),
@@ -36,7 +33,6 @@ fun AppScreen(
         stringResource(id = R.string.placeholder_email),
         stringResource(id = R.string.placeholder_password)
     )
-
 
     val loginProfileViewModel: LoginProfileScreenViewModel =
         viewModel(factory = LoginProfileScreenViewModel.Factory)
@@ -57,7 +53,6 @@ fun AppScreen(
 
         composable(route = "OnboardingScreen") {
             OnboardingScreen(
-                context = context,
                 listOfLabel = listOfLabel,
                 listOfPlaceholder = listOfPlaceholder,
                 navController = navController,
